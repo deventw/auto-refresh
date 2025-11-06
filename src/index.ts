@@ -18,6 +18,15 @@ export interface AutoRefreshOptions {
   onUpdateDetected?: () => void;
   /** Callback before page reload // 頁面重新載入前的回調函數 */
   onBeforeReload?: () => void;
+  /** 
+   * Callback to show custom popup when update is detected
+   * If provided, will use this instead of default confirm() dialog
+   * Should return a Promise<boolean> - true to reload, false to cancel
+   * 檢測到更新時顯示自定義彈出視窗的回調函數
+   * 如果提供，將使用此函數替代默認的 confirm() 對話框
+   * 應返回 Promise<boolean> - true 表示重新載入，false 表示取消
+   */
+  onShowPopup?: (message: string) => Promise<boolean>;
 }
 
 /**
@@ -99,6 +108,7 @@ export function autoRefresh(options: AutoRefreshOptions = {}): () => void {
     pattern = DEFAULT_SCRIPT_REGEX,
     onUpdateDetected,
     onBeforeReload,
+    onShowPopup,
   } = options;
 
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -115,11 +125,14 @@ export function autoRefresh(options: AutoRefreshOptions = {}): () => void {
       if (willUpdate) {
         // Call update detected callback // 調用更新檢測回調
         onUpdateDetected?.();
-        // Show confirmation dialog // 顯示確認對話框
-        const result = confirm(message);
+        
+        // Show confirmation dialog (custom or default) // 顯示確認對話框（自定義或默認）
+        const result = onShowPopup 
+          ? await onShowPopup(message)
+          : confirm(message);
+        
         // If user confirms, reload the page // 如果用戶確認，重新載入頁面
         if (result) {
-          // Call before reload callback // 調用重新載入前回調
           onBeforeReload?.();
           location.reload();
         } else {

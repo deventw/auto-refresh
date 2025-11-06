@@ -207,6 +207,33 @@ const stop = autoRefresh({
 });
 ```
 
+### Custom Popup
+
+You can provide your own popup implementation instead of using the default `confirm()` dialog:
+
+```typescript
+import { autoRefresh } from 'auto-refresh';
+
+// Using a custom modal library (e.g., SweetAlert2)
+autoRefresh({
+  onShowPopup: async (message) => {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Update Available',
+      text: message,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Reload',
+      cancelButtonText: 'Later'
+    });
+    return isConfirmed;
+  }
+});
+```
+
+**Note:** The `onShowPopup` function should return a `Promise<boolean>`:
+- `true` = user wants to reload the page
+- `false` = user wants to cancel, continue checking for updates
+
 ### Custom Regex Pattern
 
 You can customize the regex pattern to match different tags or attributes:
@@ -256,6 +283,7 @@ Starts the auto-refresh process. Returns a function to stop the auto-refresh (op
 - `pattern?: RegExp` - Custom regex pattern to match script/link tags (default: matches `<script src="...">`)
 - `onUpdateDetected?: () => void` - Callback when update is detected
 - `onBeforeReload?: () => void` - Callback before page reload
+- `onShowPopup?: (message: string) => Promise<boolean>` - Custom popup function. If provided, will use this instead of default `confirm()` dialog. Should return `true` to reload, `false` to cancel
 
 ### `needUpdate(checkUrl?: string, pattern?: RegExp): Promise<boolean>`
 
@@ -270,7 +298,8 @@ Extracts script source URLs from the specified page using the provided regex pat
 1. Fetches the HTML of the current page (or specified URL) with a timestamp to bypass cache
 2. Extracts matching tags from the HTML using the regex pattern (default: `<script src="...">` tags)
 3. Compares the extracted sources with the previous check
-4. If changes are detected, prompts the user to refresh
+4. If changes are detected, calls `onUpdateDetected` callback (if provided) and prompts the user to refresh
+   - Uses `onShowPopup` if provided, otherwise uses default `confirm()` dialog
 5. Reloads the page if the user confirms
 
 ## License
