@@ -1,5 +1,5 @@
 {
-  "name": "auto-refresh",
+  "name": "@deventw/auto-refresh",
   "version": "1.0.0",
   "description": "Automatically detect and prompt for page updates by monitoring script changes",
   "type": "module",
@@ -30,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/deventw/auto-refresh.git"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
