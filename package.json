@@ -1,5 +1,5 @@
 {
-  "name": "auto-refresh",
+  "name": "@deventw/auto-refresh",
   "version": "1.0.0",
   "description": "Automatically detect and prompt for page updates by monitoring script changes",
   "type": "module",
