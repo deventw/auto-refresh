@@ -1,0 +1,39 @@
+{
+  "name": "auto-refresh",
+  "version": "1.0.0",
+  "description": "Automatically detect and prompt for page updates by monitoring script changes",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "auto-refresh",
+    "auto-update",
+    "page-refresh",
+    "hot-reload",
+    "update-detection"
+  ],
+  "author": "deventw",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
+
