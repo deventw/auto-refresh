@@ -158,6 +158,17 @@ This package is **framework-agnostic** - it only uses standard browser APIs (`fe
 import { autoRefresh } from 'auto-refresh'
 
 // Only enable in production
+autoRefresh({
+  enabled: import.meta.env.PROD || process.env.NODE_ENV === 'production'
+})
+```
+
+**Alternative approach** (using conditional):
+
+```typescript
+import { autoRefresh } from 'auto-refresh'
+
+// Only enable in production
 if (import.meta.env.PROD) { // Vite
   // or: if (process.env.NODE_ENV === 'production') { // Webpack/CRA
   autoRefresh()
@@ -277,6 +288,7 @@ Starts the auto-refresh process. Returns a function to stop the auto-refresh (op
 
 **Options:**
 
+- `enabled?: boolean` - Whether to enable auto-refresh (default: true). Set to `false` to disable auto-refresh checking
 - `duration?: number` - Check interval in milliseconds (default: 2000)
 - `message?: string` - Custom message to show when update is detected
 - `checkUrl?: string` - Custom URL to fetch for checking updates (default: current page)

@@ -6,6 +6,13 @@ let lastSrcs: string[] | undefined;
  * 自動刷新的配置選項
  */
 export interface AutoRefreshOptions {
+  /** 
+   * Whether to enable auto-refresh (default: true)
+   * Set to false to disable auto-refresh checking
+   * 是否啟用自動刷新（默認：true）
+   * 設置為 false 以禁用自動刷新檢查
+   */
+  enabled?: boolean;
   /** Check interval in milliseconds // 檢查間隔時間（毫秒） */
   duration?: number;
   /** Custom message to show when update is detected // 檢測到更新時顯示的自定義訊息 */
@@ -102,6 +109,7 @@ export async function needUpdate(
  */
 export function autoRefresh(options: AutoRefreshOptions = {}): () => void {
   const {
+    enabled = true,
     duration = 2000,
     message = 'Page has updates, click OK to refresh page',
     checkUrl,
@@ -110,6 +118,11 @@ export function autoRefresh(options: AutoRefreshOptions = {}): () => void {
     onBeforeReload,
     onShowPopup,
   } = options;
+
+  // If disabled, return a no-op stop function // 如果禁用，返回一個空操作停止函數
+  if (!enabled) {
+    return () => {};
+  }
 
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
   let isRunning = true;
